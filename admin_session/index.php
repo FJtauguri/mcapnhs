@@ -3,6 +3,9 @@ session_start();
 
 include_once '../php_conn/conn.php';
 include 'retrievindata.php';
+
+// auth_checkup
+include '../void.php';
 ?>
 
 

@@ -2,30 +2,48 @@
 session_start();
 
 include_once '../php_conn/conn.php';
+include 'retrieveindata.php';
+
+// auth_checkup
+include '../void.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     $stud_lrn = $_SESSION['stud_lrn'];
     $username = $_POST['username'];
     $password = $_POST['passwordfrm']; // Plain password from the form input
 
-    // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // // Hash the password
+    // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
-    // Update username and hashed password in the database
-    $updateQuery = "UPDATE usr_stud SET stud_uname = '$username', stud_pwd = '$hashedPassword' WHERE stud_lrn = '$stud_lrn'";
+    // // Update username and hashed password in the database
+    // $updateQuery = "UPDATE usr_stud SET stud_uname = '$username', stud_pwd = '$hashedPassword' WHERE stud_lrn = '$stud_lrn'";
+    // $updateResult = mysqli_query($conn, $updateQuery);
+
+    if (!empty($password)) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $updateQuery = "UPDATE usr_stud SET stud_uname = '$username', stud_pwd = '$hashedPassword' WHERE stud_lrn = '$stud_lrn'";
+    } else {
+        $updateQuery = "UPDATE usr_stud SET stud_uname = '$username' WHERE stud_lrn = '$stud_lrn'";
+    }
+
     $updateResult = mysqli_query($conn, $updateQuery);
-    
     if (!$updateResult) {
-        // Handle the update error if needed
         echo "Error updating user information: " . mysqli_error($conn);
+    } else {
+        header('Location: profile.php');
+        exit();
     }
 
     // Handle image upload
     if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
         $imgName = $_FILES['profile_img']['name'];
         $imgTmp = $_FILES['profile_img']['tmp_name'];
-        $imgPath = "../assets/img/profile/" . $imgName;
+        $imgPath = "../assets/img/profile/" . $imgName; //../assets/img/
         
+
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         if (move_uploaded_file($imgTmp, $imgPath)) {
             // Update the image path in the database
             $updateImgQuery = "UPDATE usr_stud SET stud_img = '$imgPath' WHERE stud_lrn = '$stud_lrn'";
@@ -38,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
         } else {
             echo "Error uploading image.";
         }
-    }
+    } 
     // Redirect back to the profile page after saving the changes
     header('Location: profile.php');
     exit();
@@ -69,34 +87,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
 <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <?php include("sidebard.php")?>
-        <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-
-            <?php
-                // Retrieve the student data from the database based on the session information
-                if (isset($_SESSION['stud_lrn'])) {
-                    $stud_lrn = $_SESSION['stud_lrn'];
-
-                    $query = "SELECT * FROM usr_stud WHERE stud_lrn = '$stud_lrn'";
-                    $result = mysqli_query($conn, $query);
-
-                    if ($result) {
-                        $row = mysqli_fetch_assoc($result);
-                        $lrn = $row['stud_lrn'];
-                        $username = $row['stud_uname'];
-                        $email = $row['stud_email'];
-                        // $password = $row['stud_pwd'];
-                        $img = $row['stud_img'];
-                    } else {
-                        echo "Error: " . mysqli_error($conn);
-                    }
-                }
-                $defaultImgPath = "../assets/img/Sarah.png";
-                // Check if the $img variable is empty, then use the default image path
-                $imgSrc = !empty($img) ? $img : $defaultImgPath;
-            ?>
 
            <!-- Navigation bar -->
            <nav class="navbar navbar-expand-lg navbar-light py-2 px-4">
@@ -119,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                         <img src="<?php echo $imgSrc; ?>" class="img-fluid rounded-circle " alt="Wild Landscape" style="width: 40px; height: 40px;"/>
                             <a class="nav-link dropdown-toggle second-text fw-bold fs-8 text-white" href="#" id="navbarDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php echo isset($username) ? $username : 'Not logged in'; ?>
+                                <?php echo isset($stud_uname) ? $stud_uname : 'Not logged in'; ?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="profile.php">Profile</a></li>
@@ -143,11 +136,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                                 </div>
                                 <div class="col-lg-11 row mx-1 d-flex my-3">
                                     <p class="valvname pb-0 mb-0">Username</p>
-                                    <input type="text" class="valv" id="" name="username" value="<?php echo isset($username) ? $username : 'Not logged in'; ?>">
+                                    <input type="text" class="valv" id="" name="username" value="<?php echo isset($stud_uname) ? $stud_uname : 'Not logged in'; ?>">
                                 </div>
                                 <div class="col-lg-11 row mx-1 d-flex my-3">
                                     <p class="valvname pb-0 mb-0">Email</p>
-                                    <input type="text" class="valv" id="" name="email" value="<?php echo isset($_SESSION['stud_email']) ? $_SESSION['stud_email'] : 'Not logged in'; ?>" readonly>
+                                    <input type="email" class="valv" id="" name="email" value="<?php echo isset($_SESSION['stud_email']) ? $_SESSION['stud_email'] : 'Not logged in'; ?>" readonly>
                                 </div>
                                 <div class="col-lg-11 row mx-1 d-flex my-3">
                                     <p class="valvname pb-0 mb-0">Password</p>
@@ -161,8 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                                     <!-- </div> -->
                                 </div>
                             </div>
-                            <div class="col-lg-4 align-items-center justify-content-center">
-                                <div class="col-12 py-3 px-3 bg-white text-center justify-content-center" style="position: relative; height: 500px;">
+                            <div class="col-lg-4 col-sm-12 align-items-center justify-content-center">
+                                <div class="col-12 py-3 px-3 bg-white text-center justify-content-center" style="position: relative; height: 400px;">
                                     <!-- Profile Image -->
                                     <img id="image-preview" class="img-fluid text-center" src="<?php echo $imgSrc; ?>" alt="profile"
                                         style="width: 200px; height: 200px; object-fit: cover;">
@@ -178,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                                 <script>
                                     const imageInput = document.getElementById('img');
                                     const imagePreview = document.getElementById('image-preview');
+                                    const fileElement = document.getElementById('filename');
 
                                     imageInput.addEventListener('change', (event) => {
                                         const file = event.target.files[0];
@@ -186,13 +180,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
 
                                             reader.onload = (e) => {
                                                 imagePreview.src = e.target.result;
+                                                const fileName = event.target.files[0].name;
+                                                fileElement.textContent = fileName;
                                             };
 
                                             reader.readAsDataURL(file);
                                         }
                                     });
+                                    
                                 </script>
-
                             </div>
                         </div>
                     </div>
@@ -221,13 +217,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
 <script type="text/javascript"></script>
 
 <script>
-    const file = document.getElementById(img);
-    const fileinput = document.getElementById(filename);
+    // const file = document.getElementById(img);
+    // const fileinput = document.getElementById(filename);
 
-    file.addEventListener('change', (event) => {
-        const fileName = event.target.file[0].name;
-        fileElement.textContent = fileName;
-    });
+    // file.addEventListener('change', (event) => {
+    //     const fileName = event.target.file[0].name;
+    //     fileElement.textContent = fileName;
+    // });
 </script>
 
 </body>

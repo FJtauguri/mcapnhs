@@ -3,43 +3,29 @@ session_start();
 
 include_once '../php_conn/conn.php';
 include 'retrievindata.php';
-// // Retrieving data from the database
-// if (isset($_SESSION['adm_email'])) {
-//     $adm_email = $_SESSION['adm_email'];
-//     $query = "SELECT * FROM usr_adm WHERE adm_email = '$adm_email'";
-//     $result = mysqli_query($conn, $query);
-//     // echo "Session adm_email: " . $_SESSION['adm_email'];
 
-//     if ($result && mysqli_num_rows($result) > 0) {
-//         $row = mysqli_fetch_assoc($result);
-//         $adm_username = $row['adm_username'];
-//         $adm_email = $row['adm_email'];
-//         $img = $row['adm_img'];
-//     } else {
-//         echo "Error: Admin data not found.";
-//     }
-// }
-
-// $defaultImgPath = "../assets/img/Sarah.png";
-// // Check if the $img variable is empty, then use the default image path
-// $imgSrc = !empty($img) ? $img : $defaultImgPath;
+// auth_checkup
+include '../void.php';
 
 // function for save or update
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     $adm_email = $_SESSION['adm_email'];
     $username = $_POST['username'];
-    $password = $_POST['passwordfrm']; // Plain password from the form input
+    $password = $_POST['passwordfrm']; 
+    
+    if (!empty($password)) {
+        // Hash the new password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
-    // Update username and hashed password in the database
-    // $updateQuery = "UPDATE usr_adm SET adm_username = '$username', adm_pwd = '$hashedPassword' WHERE adm_email = '$adm_email'";
-    $updateQuery = "UPDATE usr_adm SET adm_username = '$username', adm_pwd = '$hashedPassword' WHERE adm_email = '$adm_email'";
+        $updateQuery = "UPDATE usr_adm SET adm_username = '$username', adm_pwd = '$hashedPassword' WHERE adm_email = '$adm_email'";
+    } else {
+        $updateQuery = "UPDATE usr_adm SET adm_username = '$username' WHERE adm_email = '$adm_email'";
+    }
+
     $updateResult = mysqli_query($conn, $updateQuery);
-    
+
+
     if (!$updateResult) {
-        // Handle the update error if needed
         echo "Error updating user information: " . mysqli_error($conn);
     }
 
@@ -154,27 +140,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                                 <div class="col-lg-11 row mx-1 d-flex my-3">
                                     
                                     <p class="valvname pb-0 mb-0">Password </p>
-                                    <input type="text" class="valv form-icon-trailing" id="" name="passwordfrm" value="">
-                                    <i class="far fa-eye trailing pt-1 text-end position-absolute end-0" style="pointer-events: all;"></i>   
+                                    <i id="eye" class="far fa-eye trailing pt-1 " style="color: #BBBEC5; width: 50px;"></i>
+                                    <input type="password" class="valv form-icon-trailing" id="passwordfrm" name="passwordfrm" value="">   
+                                    <!-- f00 -->
                                         <style>
                                             .row {
                                                 position: relative;
                                             }
 
                                             .form-icon-trailing {
-                                                padding-right: 2.5rem; /* Adjust the padding as needed */
+                                                margin-right: 2.5rem; 
                                             }
 
                                             .trailing {
+                                                /* width: 25px; */
+                                                /* height: 25px;
+                                                padding-left: 500px; */
                                                 position: absolute;
                                                 top: 70%;
-                                                /* left: 10px; */
-                                                right: 100px; /* Adjust the position as needed 0.75rem*/
+                                                right: 10px; 
                                                 pointer-events: all;
                                                 transform: translateY(-50%);
+                                                /* transform: translateX(-50%); */
                                             }
                                         </style>
-
+                                        <!-- Password view jquery -->
                                 </div>
 
                                 <div class="col-lg-11 text-end justify-content-end align-content-end my-3 mx-1">
@@ -210,10 +200,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
 
                                             reader.onload = (e) => {
                                                 imagePreview.src = e.target.result;
-                                                fileInput.addEventListener('change', (event) => {
-                                                    const fileName = event.target.files[0].name;
-                                                    fileElement.textContent = fileName;
-                                                });
+                                                fileElement.textContent = file.name;
+                                                // fileInput.addEventListener('change', (event) => {
+                                                //     const fileName = event.target.files[0].name;
+                                                //     fileElement.textContent = fileName;
+                                                // });
                                             };
 
                                             reader.readAsDataURL(file);
@@ -229,12 +220,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
             </div>
         </div>
     </div>
-    <!-- /#page-content-wrapper -->
     </div>
-
-    <!-- <php include'../assets/js/random.php';?> -->
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- MDB -->
+<script type="text/javascript" src="../assets/js/mdb.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#eye').on('click', function() {
+            const passwordInput = $('#passwordfrm');
+            const icon = $(this);
+
+            if (passwordInput.attr('type') === 'password') {
+                passwordInput.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordInput.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+    });
+</script>
+
+
+
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
@@ -244,8 +255,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     };
 </script>
 
-<!-- MDB -->
-<script type="text/javascript" src="../assets/js/mdb.min.js"></script>
 <!-- Custom scripts -->
 <script type="text/javascript"></script>
 
@@ -258,6 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
         fileElement.textContent = fileName;
     });
 </script>
+
 
 </body>
 </html>

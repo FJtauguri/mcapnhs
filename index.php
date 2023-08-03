@@ -1,8 +1,6 @@
 <?php
+// session_start();
 include_once 'login_process.php';
-
-
-
 ?>
 
 
@@ -26,13 +24,13 @@ include_once 'login_process.php';
 <body>
 
 <section class="vh-100">
-  <div class="container-fluid h-custom">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-md-9 col-lg-6 col-xl-5">
+  <div class="container-fluid col-lg-12 h-customs h-100">
+    <div class="row col-lg-12 d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-lg-6 col-xl-5">
         <img src="./assets/img/Guidance_Counseling.jpg"
             class="img-fluid" alt="Registration image">
       </div>
-      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+      <div class="col-md-8 col-lg-6 col-lg-6 col-xl-4 offset-xl-1 h-70 py-3 justify-content-center align-items-center d-flex">
         <form method="POST">
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-center">
             <p class="lead fw-normal mb-0 me-3">Sign in with</p>
@@ -54,10 +52,31 @@ include_once 'login_process.php';
 
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <input type="password" name="password" id="password" class="form-control form-control-lg"
-              placeholder="Enter password" />
+            <i id="eye" class="far fa-eye trailing pt-1 text-center end-0" style="color: #BBBEC5; width: 50px;"></i>
+            <input type="password" name="password" id="passwordfrm" class="form-control form-control-lg form-icon-trailing" placeholder="Enter password" />
             <label class="form-label" for="pasword">Password</label>
           </div>
+          <style>
+              .row {
+                  position: relative;
+              }
+
+              .form-icon-trailing {
+                  margin-right: 2.5rem; 
+              }
+
+              .trailing {
+                  /* width: 25px; */
+                  /* height: 25px;
+                  padding-left: 500px; */
+                  position: absolute;
+                  top: 70%;
+                  right: 10px; 
+                  pointer-events: all;
+                  transform: translateY(-50%);
+                  /* transform: translateX(-50%); */
+              }
+          </style>
 
 
 
@@ -81,13 +100,13 @@ include_once 'login_process.php';
               class="link-danger">Register</a>
             </p>
             <div class="text-center text-lg-center pt-2" id="regOPT">
-              <button type="button" class="btn btn-primary btn-lg mt-2"
-                style="width: 10rem;">
-                <a href="./register_admin.php" style="color: white; text-decoration: none;">Regiter as Councelor</a>
+              <button type="button" class="btn btn-outline-danger btn-lg mt-2"
+                style="width: 10rem; height: 2.5rem; padding: 0 0 0 0; margin: 0 0 0 0; ">
+                <a href="./register_admin.php" style="color: white; text-decoration: none; font-size: 12px; color: #000;">Regiter as Councelor</a>
               </button>
-              <button type="button" class="btn btn-primary btn-lg mt-2"
-                style="width: 10rem;">
-                <a href="./register_stud.php" style="color: white; text-decoration: none;">Regiter as Student</a>
+              <button type="button" class="btn btn-outline-warning btn-lg mt-2"
+                style="width: 10rem; height: 2.5rem; padding: 0 0 0 0; margin: 0 0 0 0; ">
+                <a href="./register_stud.php" style="color: white; text-decoration: none; font-size: 12px; color: #000;">Regiter as Student</a>
               </button>
             </div>
           </div>
@@ -100,9 +119,25 @@ include_once 'login_process.php';
 
     <!-- MDB -->
     <script type="text/javascript" src="assets/js/mdb.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom scripts -->
     <script type="text/javascript"></script>
+    <script>
+        $(document).ready(function() {
+            $('#eye').on('click', function() {
+                const passwordInput = $('#passwordfrm');
+                const icon = $(this);
 
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
 
     <?php if (isset($_SESSION['login_failed']) && $_SESSION['login_failed']) : ?>
         <div class="toast-container position-absolute p-3" style="top: 10px; right: 10px;">

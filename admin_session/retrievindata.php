@@ -1,24 +1,4 @@
 <?php
-// Retrieve the admin data from the database
-// if (isset($_SESSION['adm_email'])) {
-//     $adm_email = $_SESSION['adm_email'];
-
-//     $query = "SELECT * FROM usr_adm WHERE adm_email = '$adm_email'";
-//     $result = mysqli_query($conn, $query);
-
-//     if ($result) {
-//         $row = mysqli_fetch_assoc($result);
-//         $username = $row['adm_username'];
-//         $email = $row['adm_email'];
-//         // $password = $row['adm_pwd'];
-//         $img = $row['adm_img'];
-//     } else {
-//         echo "Error: " . mysqli_error($conn);
-//     }
-// }
-// $defaultImgPath = "../assets/img/Sarah.png";
-// $imgSrc = !empty($img) ? $img : $defaultImgPath;
-
 // Retrieving data from the database
 if (isset($_SESSION['adm_email'])) {
     $adm_email = $_SESSION['adm_email'];
