@@ -14,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     $password = $_POST['passwordfrm']; 
     
     if (!empty($password)) {
-        // Hash the new password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $updateQuery = "UPDATE usr_adm SET adm_username = '$username', adm_pwd = '$hashedPassword' WHERE adm_email = '$adm_email'";
@@ -29,26 +28,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
         echo "Error updating user information: " . mysqli_error($conn);
     }
 
-    // Handle image upload
     if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
         $imgName = $_FILES['profile_img']['name'];
         $imgTmp = $_FILES['profile_img']['tmp_name'];
         $imgPath = "../assets/img/profile/" . $imgName;
         
         if (move_uploaded_file($imgTmp, $imgPath)) {
-            // Update the image path in the database
             $updateImgQuery = "UPDATE usr_adm SET adm_img = '$imgPath' WHERE adm_email = '$adm_email'";
             $updateImgResult = mysqli_query($conn, $updateImgQuery);
 
             if (!$updateImgResult) {
-                // Handle the update error if needed
                 echo "Error updating profile image: " . mysqli_error($conn);
             }
         } else {
             echo "Error uploading image.";
         }
     }
-    // Redirect back to the profile page after saving the changes
     header('Location: profile.php');
     exit();
 }  

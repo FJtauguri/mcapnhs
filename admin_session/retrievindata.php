@@ -17,7 +17,6 @@ if (isset($_SESSION['adm_email'])) {
 }
 
 $defaultImgPath = "../assets/img/Sarah.png";
-// Check if the $img variable is empty, then use the default image path
 $imgSrc = !empty($img) ? $img : $defaultImgPath;
 
 ?>

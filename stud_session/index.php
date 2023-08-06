@@ -12,13 +12,11 @@ saveFormDataToDatabase($conn);
 function saveFormDataToDatabase($conn) {
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (isset($_POST['lrn'])) {
-            // Sanitize the input data to prevent SQL injection
             function sanitizeInput($data) {
                 global $conn;
                 return mysqli_real_escape_string($conn, htmlspecialchars(trim($data)));
             }
 
-            // Fetch and sanitize form data
             $lrn = sanitizeInput($_POST['lrn']);
             $fname = sanitizeInput($_POST['fname']);
             $mname = sanitizeInput($_POST['mname']);
@@ -50,7 +48,6 @@ function saveFormDataToDatabase($conn) {
             $adv10 = sanitizeInput($_POST['adv10']);
             $medical = sanitizeInput($_POST['medical']);
 
-            // SQL query to fetch existing data from the table
             $select_query = "SELECT * FROM stud_info WHERE lrn = '$lrn'";
             $select_result = mysqli_query($conn, $select_query);
             
@@ -60,7 +57,7 @@ function saveFormDataToDatabase($conn) {
                     if ($row_count > 0){
                         $row = mysqli_fetch_assoc($select_result);
 
-                        // Update only the fields that have new values from the form
+                        // UPDATING the field if wala existing
                         $update_fields = array();
                         if ($fname != '' && $fname !== $row['fname']) {
                             $update_fields[] = "fname = '$fname'";
@@ -151,11 +148,9 @@ function saveFormDataToDatabase($conn) {
                             $update_fields[] = "medical = '$medical'";
                         }
 
-                        // Construct the UPDATE query
                         if (!empty($update_fields)) {
                             $update_query = "UPDATE stud_info SET " . implode(', ', $update_fields) . " WHERE lrn = '$lrn'";
         
-                            // Execute the query
                             if (mysqli_query($conn, $update_query)) {
                                 echo '<script>alert("Data updated");</script>';
                             } else {
@@ -165,7 +160,6 @@ function saveFormDataToDatabase($conn) {
                             echo "No fields to update.";
                         }
                     } else {
-                        // Else lrn does not exist 
                         $insert_query = "INSERT INTO stud_info (lrn, fname, mname, lname, nickname, bdate, age, gender, glevel, moname, mooccupation, mophone, moaddress, paname, paoccupation, paphone, paaddress, lename, leoccupation, lerelation, lephone, section7, adv7, section8, adv8, section9, adv9, section10, adv10, medical) VALUES ('$lrn', '$fname', '$mname', '$lname', '$nickname', '$bdate', '$age', '$gender', '$glevel', '$moname', '$mooccupation', '$mophone', '$moaddress', '$paname', '$paoccupation', '$paphone', '$paaddress', '$lename', '$leoccupation', '$lerelation', '$lephone', '$section7', '$adv7', '$section8', '$adv8', '$section9', '$adv9', '$section10', '$adv10', '$medical')";
 
                         if (mysqli_query($conn, $insert_query)){
@@ -290,9 +284,9 @@ $studentInfo = getStudentInfo($conn);
                     <form class="col-lg-12" action="" method="post">
                         <div class="col-lg-12 d-flex p-3">
 
-                            <?php include 'indexformshow.php';?> <!-- While user didn't hit or click the Edit button, it will show as default -->
+                            <?php include 'indexformshow.php';?> 
                             
-                            <?php include 'indexform.php';?> <!-- If user click the Edit button, this indexform.php will be visible and the indexformshow.php will be invinsible -->
+                            <?php include 'indexform.php';?> 
                             
                             <!-- RIGHT SIDE BUTONSS-->
                             <div class="col-lg-2 p-3 ms-2 bg-transparent">
@@ -301,15 +295,8 @@ $studentInfo = getStudentInfo($conn);
                                 </p>
                                 <div class="row">
                                     <div class="col-lg-12 d-block px-0 row gy-3 gx-0">
-
-                                        <!-- After I clicked it,  indexform.php' wil be visible with faded intro and the EDIT button will transform into save button. But, while I didn't click it indexform.php will not show or it will be hidden-->
-                                        <!-- <button name="edit" type="button" class="btn btn-outline-primary col-lg-12">Edit</button>  -->
-
-                                        <!-- The Edit button with onclick event -->
                                         <button name="edit" id="editButton" type="button" class="btn btn-outline-primary col-lg-12" onclick="showEditForm()">Edit</button>
-                                        <!-- The Cancel button initially hidden with display: none -->
                                         <button name="cancel" id="cancelButton" type="button" class="btn btn-outline-danger col-lg-12" style="display: none;" onclick="hideEditForm()">Cancel</button>
-                                    
                                         <button name="print" type="button" class="btn btn-outline-primary col-lg-12">Print</button>
                                     </div>
                                 </div>
@@ -342,51 +329,42 @@ $studentInfo = getStudentInfo($conn);
 <!-- SCRIPT for autoreload -->
 
 
-<!-- Behaviour of EDIT and CANCEL -->
+<!-- Behaviour ng EDIT and CANCEL -->
 <script>
     function showEditForm() {
-        // Get the Edit button element
+        
         const editButton = document.getElementById('editButton');
 
-        // Get the Cancel button element
+        
         const cancelButton = document.getElementById('cancelButton');
 
-        // Get the indexform.php section element
+        
         const indexForm = document.getElementById('section1');
 
-        // Get the indexformshow.php section element
+        
         const indexFormShow = document.getElementById('indexformshow');
 
-        // Show indexform.php and the Cancel button
+        
         indexForm.style.display = 'block';
         cancelButton.style.display = 'block';
 
-        // Hide indexformshow.php and change the button text to "Cancel"
+        
         indexFormShow.style.display = 'none';
-        editButton.style.display = 'none'; // Hide the Edit button
+        editButton.style.display = 'none'; 
     }
 
     function hideEditForm() {
-        // Get the Edit button element
         const editButton = document.getElementById('editButton');
-
-        // Get the Cancel button element
         const cancelButton = document.getElementById('cancelButton');
-
-        // Get the indexform.php section element
         const indexForm = document.getElementById('section1');
         const indexForm2 = document.getElementById('section2');
         const indexForm3 = document.getElementById('section3');
         const indexForm4 = document.getElementById('section4');
-
-        // Get the indexformshow.php section element
         const indexFormShow = document.getElementById('indexformshow');
 
-        // Show indexformshow.php and the Edit button
         indexFormShow.style.display = 'block';
-        editButton.style.display = 'block'; // Show the Edit button
+        editButton.style.display = 'block'; // Showi ng Edit button
 
-        // Hide indexform.php and the Cancel button
         indexForm.style.display = 'none';
         indexForm2.style.display = 'none';
         indexForm3.style.display = 'none';
@@ -396,15 +374,13 @@ $studentInfo = getStudentInfo($conn);
 </script>
 
 
-<!-- Behavious for Section$ in indexform.php -->
+<!-- Behavious ng Section$ in indexform.php -->
 <script>
     function showSection(sectionId) {
-        // Hide all sections
         document.querySelectorAll('.col-lg-10').forEach((section) => {
             section.style.display = 'none';
         });
 
-        // Show the specified section
         const section = document.getElementById(sectionId);
         if (section) {
             section.style.display = 'block';

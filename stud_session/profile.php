@@ -74,22 +74,108 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
 
     <!-- css -->
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/message.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
     <!-- MDB -->
     <link rel="stylesheet" href="../assets/css/mdb.min.css" />
+    <style>
 
+    </style>
 </head>
 <body>
     
+
+    
+    <div class="message-corner-container" id="message-container">
+        <div class="container">
+            <div class="row bg-dark " style="height: 450px;">
+                <div class="col-12 pt-1 d-flex" style="height: 35px;">
+                    <div class="col-10 text-start d-flex position-relative">
+                        <img src="<?php echo $imgSrc; ?>" class="img-fluid rounded-circle " alt="Wild Landscape" style="width: 30px; height: 30px;"/>
+                        <a class="nav-link dropdown-toggle second-text fw-bold fs-8 text-white" href="#" id="navbarDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px; align-items: center; display: flex; align-content: center; flex-wrap: wrap; padding-left: 10px;">
+                            <?php echo isset($stud_uname) ? $stud_uname : 'Not logged in'; ?>
+                        </a>
+                    </div>
+                    <div class="col-2 text-end message-exit"><i class="bi bi-x-lg" id="message-exit"></i></div>
+                </div>
+
+                <div class="conversation" id="conversation">
+                    <div class="message-content message-box col-12 bg-white" style="">
+                        <div class="text-dark receiver" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="receiver-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-receiver">
+                                Lorem ipsum dolor, sit amet consectetur <br><i class="time">10:20pm</i>
+                            </div>
+                        </div>
+                        <div class="text-dark sender right" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="sender-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-sender">
+                                Lorem ipsum dolor, sit amet <br><i class="time time-sender">10:20pm</i>
+                            </div>
+                        </div>
+                        <div class="text-dark receiver" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="receiver-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-receiver">
+                                Lorem ipsum dolor, sit amet consectetur <br><i class="time">10:20pm</i>
+                            </div>
+                        </div>
+                        <div class="text-dark receiver" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="receiver-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-receiver">
+                                Lorem ipsum dolor, sit amet consectetur <br><i class="time">10:20pm</i>
+                            </div>
+                        </div>
+                        <div class="text-dark receiver" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="receiver-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-receiver">
+                                Lorem ipsum dolor, sit amet consectetur <br><i class="time">10:20pm</i>
+                            </div>
+                        </div>
+                        <div class="text-dark receiver" style="">
+                            <div class="image-container">
+                                <img src="<?php echo $imgSrc; ?>" class="receiver-img img-fluid rounded-circle " alt="Wild Landscape" style=""/>
+                            </div>
+                            <div class="message-receiver">
+                                Lorem ipsum dolor, sit amet consectetur <br><i class="time">10:20pm</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-input message-input-box col-12">
+                        <form action="" method="post">
+                            <div class="box">
+                                <textarea name="message-send" rows="4" class="valv text-start text-align-left box-input box-input-extra" placeholder="Type your message here..."></textarea>
+                                <button type="submit" class="message-send-btn send-ico"><i class="bi bi-send-fill send-ico"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <div class="d-flex" id="wrapper">
+
         <!-- Sidebar -->
         <?php include("sidebard.php")?>
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
+
+            <!--  -->
+
 
            <!-- Navigation bar -->
            <nav class="navbar navbar-expand-lg navbar-light py-2 px-4">
@@ -109,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown d-flex">
-                        <img src="<?php echo $imgSrc; ?>" class="img-fluid rounded-circle " alt="Wild Landscape" style="width: 40px; height: 40px;"/>
+                            <img src="<?php echo $imgSrc; ?>" class="img-fluid rounded-circle " alt="Wild Landscape" style="width: 40px; height: 40px;"/>
                             <a class="nav-link dropdown-toggle second-text fw-bold fs-8 text-white" href="#" id="navbarDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?php echo isset($stud_uname) ? $stud_uname : 'Not logged in'; ?>
@@ -123,7 +209,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                     </ul>
                 </div>
             </nav>
-            
+
+
             <div class="container-fluid px-4">
                 <form action="profile.php" method="post" enctype="multipart/form-data">
                     <div class="row px-3 py-3">
@@ -155,7 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
                                 </div>
                             </div>
                             <div class="col-lg-4 col-sm-12 align-items-center justify-content-center">
-                                <div class="col-12 py-3 px-3 bg-white text-center justify-content-center" style="position: relative; height: 400px;">
+                                <div class="col-12 py-3 px-3 bg-white text-center justify-content-center" style=" height: 400px;">
                                     <!-- Profile Image -->
                                     <img id="image-preview" class="img-fluid text-center" src="<?php echo $imgSrc; ?>" alt="profile"
                                         style="width: 200px; height: 200px; object-fit: cover;">
@@ -202,6 +289,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     <!-- <php include'../assets/js/random.php';?> -->
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
@@ -225,6 +314,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save']) ) {
     //     fileElement.textContent = fileName;
     // });
 </script>
+
+<!-- CLOSE_animation -->
+<script>
+  $(document).ready(function() {
+    $("#message-exit").on("click", function() {
+      $("#message-container").addClass("slide-down-hide");
+
+      // Hide the message-container after the animation is complete
+      setTimeout(function() {
+        $("#message-container").hide();
+      }, 500); // Adjust the time to match the animation duration (0.5s in this case)
+    });
+  });
+</script>
+
 
 </body>
 </html>

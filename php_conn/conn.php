@@ -1,5 +1,4 @@
 <?php
-// conn.php
 
 $host = "localhost";
 $username = "root";

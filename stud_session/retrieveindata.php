@@ -18,7 +18,6 @@ if (isset($_SESSION['stud_lrn'])) {
 }
 
 $defaultImgPath = "../assets/img/Sarah.png";
-// Check if the $img variable is empty, then use the default image path
 $imgSrc = !empty($img) ? $img : $defaultImgPath;
 
 ?>

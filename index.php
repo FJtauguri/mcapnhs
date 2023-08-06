@@ -52,7 +52,7 @@ include_once 'login_process.php';
 
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <i id="eye" class="far fa-eye trailing pt-1 text-center end-0" style="color: #BBBEC5; width: 50px;"></i>
+            <i id="eye" class="far fa-eye trailing pt-1 text-center end-0" style="color: #BBBEC5; width: 50px; cursor: pointer;"></i>
             <input type="password" name="password" id="passwordfrm" class="form-control form-control-lg form-icon-trailing" placeholder="Enter password" />
             <label class="form-label" for="pasword">Password</label>
           </div>
